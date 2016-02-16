@@ -1,5 +1,3 @@
-package dao;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -11,14 +9,14 @@ import static org.junit.Assert.*;
 public class XmlDaoFactoryTest {
 
     private static XmlDaoFactory xmlDaoFactory;
-    private static File file;
+    private static String file;
     private static Class objectClass;
 
     @BeforeClass
     public static void init() {
         xmlDaoFactory = new XmlDaoFactory();
-        file = new File(XmlDaoFactory.class.getClassLoader().getResource("xml_db.xml").getFile());
-        objectClass = XmlDaoFactoryTest.class;
+        file = "xml_db.xml";
+        objectClass = SimpleClass.class;
     }
 
     @Test
