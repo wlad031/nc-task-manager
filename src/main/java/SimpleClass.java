@@ -8,40 +8,36 @@ public class SimpleClass {
     @XmlAttribute
     public int id;
 
-    private String s;
-    private int a;
-    private boolean b;
+    private String myString;
+    private int myInt;
+    private boolean myBoolean;
 
     public SimpleClass() {
     }
 
     public SimpleClass(int id, String s, int a, boolean b) {
         this.id = id;
-        this.s = s;
-        this.a = a;
-        this.b = b;
+        this.myString = s;
+        this.myInt = a;
+        this.myBoolean = b;
     }
 
-    @Getter(fieldName = "id")
     public int getId() {
         return id;
     }
 
     @XmlElement
-    @Getter(fieldName = "s")
-    public String getS() {
-        return s;
+    public String getMyString() {
+        return myString;
     }
 
     @XmlElement
-    @Getter(fieldName = "a")
-    public int getA() {
-        return a;
+    public int getMyInt() {
+        return myInt;
     }
 
     @XmlElement
-    @Getter(fieldName = "b")
-    public boolean isB() {
-        return b;
+    public boolean isMyBoolean() {
+        return myBoolean;
     }
 }
