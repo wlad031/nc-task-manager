@@ -1,9 +1,5 @@
-import javax.xml.bind.*;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.JAXBException;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class XmlDao implements Dao {
@@ -18,35 +14,42 @@ public class XmlDao implements Dao {
             throw new DaoException("Object type can't be null");
         }
 
+        if (!new File(XmlDao.class.getClassLoader().getResource(resourceName).getFile()).exists()) {
+            throw new DaoException("File not found");
+        }
+
         this.resourceName = resourceName;
         this.objectType = objectType;
 
         try {
             this.marshallerAdapter = new MarshallerAdapter(objectType);
         } catch (JAXBException e) {
-            e.printStackTrace();
+            throw new DaoException("Error in JAXBContext creating", e);
         }
     }
 
     @Override
-    public Object get(int id) {
-        return getAll().get(0);
+    public Object get(int id) throws DaoException {
+
+        List list = getAll();
+
+        if (id >= list.size() || id < 0) {
+            throw new DaoException("Wrong ID");
+        }
+
+        return list.get(id);
     }
 
     @Override
-    public List getAll() {
+    public List getAll() throws DaoException {
 
-        try (InputStream inputStream = XmlDaoFactory.class.getClassLoader().getResourceAsStream(resourceName);) {
-
+        try (InputStream inputStream = XmlDaoFactory.class.getClassLoader().getResourceAsStream(resourceName)) {
             return marshallerAdapter.unmarshal(inputStream);
-
         } catch (JAXBException e) {
-            e.printStackTrace();
+            throw new DaoException("Error in JAXB", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new DaoException("Error in IO", e);
         }
-
-        return null;
     }
 
     @Override
@@ -55,34 +58,32 @@ public class XmlDao implements Dao {
         try {
             objectType.cast(object);
         } catch (ClassCastException e) {
-            throw new DaoException("Wrong object type");
+            throw new DaoException("Wrong object type", e);
         }
 
         List list = getAll();
 
-        if (id >= list.size()) {
+        if (id >= list.size() || id < 0) {
             throw new DaoException("Wrong ID");
         }
 
         list.set(id, object);
 
-        try (OutputStream outputStream = new FileOutputStream(
-                new File(XmlDaoFactory.class.getClassLoader().getResource(resourceName).getFile()))) {
-
-            marshallerAdapter.marshal(list, outputStream);
-
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        marshal(list);
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(int id) throws DaoException {
 
+        List list = getAll();
+
+        if (id >= list.size() || id < 0) {
+            throw new DaoException("Wrong ID");
+        }
+
+        list.remove(id);
+
+        marshal(list);
     }
 
     @Override
@@ -91,11 +92,16 @@ public class XmlDao implements Dao {
         try {
             objectType.cast(object);
         } catch (ClassCastException e) {
-            throw new DaoException("Wrong object type");
+            throw new DaoException("Wrong object type", e);
         }
 
         List list = getAll();
         list.add(object);
+
+        marshal(list);
+    }
+
+    private void marshal(List list) throws DaoException {
 
         try (OutputStream outputStream = new FileOutputStream(
                 new File(XmlDaoFactory.class.getClassLoader().getResource(resourceName).getFile()))) {
@@ -103,11 +109,11 @@ public class XmlDao implements Dao {
             marshallerAdapter.marshal(list, outputStream);
 
         } catch (JAXBException e) {
-            e.printStackTrace();
+            throw new DaoException("Error in JAXB", e);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new DaoException("File not found", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new DaoException("Error in IO", e);
         }
     }
 }

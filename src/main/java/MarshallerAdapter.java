@@ -1,5 +1,3 @@
-import jdk.internal.org.xml.sax.SAXParseException;
-
 import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 import java.io.InputStream;
@@ -24,6 +22,7 @@ public class MarshallerAdapter<T> {
             Wrapper<T> wrapper = (Wrapper<T>) unmarshaller.unmarshal(xml, Wrapper.class).getValue();
 
             return wrapper.getList();
+
         } catch (UnmarshalException e) {
             return new ArrayList<>();
         }

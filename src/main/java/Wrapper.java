@@ -9,20 +9,15 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Wrapper<T> {
 
-    @XmlElement(name = "amount")
-    private int amount;
-
     @XmlElement(name = "item")
     private List<T> list;
 
     public Wrapper() {
         list = new ArrayList<T>();
-        amount = 0;
     }
 
     public Wrapper(List<T> list) {
         this.list = list;
-        this.amount = list.size();
     }
 
     public List<T> getList() {
@@ -31,6 +26,5 @@ public class Wrapper<T> {
 
     public void setList(List list) {
         this.list = list;
-        this.amount = list.size();
     }
 }
