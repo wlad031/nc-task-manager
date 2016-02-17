@@ -1,3 +1,6 @@
+import dao.Dao;
+import dao.XmlDao;
+import dao.XmlDaoFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
