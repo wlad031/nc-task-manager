@@ -7,10 +7,19 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter for simple marshalling/unmarshalling lists of objects
+ * @param <T>
+ */
 public class MarshallerAdapter<T> {
 
     private JAXBContext context;
 
+    /**
+     * Creates JAXB context
+     * @param clazz class of objects
+     * @throws JAXBException
+     */
     public MarshallerAdapter(Class<T> clazz) throws JAXBException {
         context = JAXBContext.newInstance(Wrapper.class, clazz);
     }

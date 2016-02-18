@@ -7,6 +7,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Marshaled class-wrapper
+ * @param <T>
+ */
 @XmlRootElement(name = "item-list")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Wrapper<T> {

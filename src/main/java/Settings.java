@@ -5,11 +5,19 @@ import dao.XmlDaoFactory;
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
-
+/**
+ * Singleton-class for storing setting of the application
+ */
 public class Settings {
 
+    /**
+     * The of name of the resource file with application settings
+     */
     private final String SETTINGS_FILE = "settings.xml";
 
+    /**
+     * Available settings of the application
+     */
     public enum Setting {
 
         MAIN_RESOURCE_NAME {
@@ -24,11 +32,20 @@ public class Settings {
             }
         };
 
+        /**
+         * @return name of the settings item
+         */
         public abstract String getName();
 
+        /**
+         * @return default value of the settings item
+         */
         public abstract Object getDefaultValue();
     }
 
+    /**
+     * Singleton instance
+     */
     private static Settings instance = new Settings();
 
     private Dao daoSettings = null;
@@ -77,6 +94,9 @@ public class Settings {
         writeSettings();
     }
 
+    /**
+     * Writes settings to the settings file
+     */
     private void writeSettings() {
 
         for (int i = 0; i < settings.size(); i++) {

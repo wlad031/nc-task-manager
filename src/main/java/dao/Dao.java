@@ -2,6 +2,9 @@ package dao;
 
 import java.util.List;
 
+/**
+ * Simple Data Access Object interface
+ */
 public interface Dao {
 
     Object get(int id) throws DaoException;
