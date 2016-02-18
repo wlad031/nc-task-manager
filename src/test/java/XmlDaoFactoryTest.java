@@ -17,8 +17,8 @@ public class XmlDaoFactoryTest {
     @BeforeClass
     public static void init() {
         xmlDaoFactory = new XmlDaoFactory();
-        file = "xml_db.xml";
-        objectClass = SimpleClass.class;
+        file = "test.xml";
+        objectClass = XmlDaoTest.SimpleClass.class;
     }
 
     @Test

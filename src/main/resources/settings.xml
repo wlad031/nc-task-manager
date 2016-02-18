@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<item-list>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="settingsItem" name="resource-name">
+        <value xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">settings.xml</value>
+    </item>
+</item-list>
