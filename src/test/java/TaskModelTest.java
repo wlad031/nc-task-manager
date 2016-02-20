@@ -25,6 +25,7 @@ public class TaskModelTest {
 
         int id = 0;
 
-        assertEquals(dao.get(id), TaskModel.getModel(id));
+        //assertEquals(dao.get(id), TaskModel.getModel(id));
+        assert false;
     }
 }

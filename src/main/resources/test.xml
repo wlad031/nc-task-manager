@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<item-list>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="simpleClass">
+        <id>1</id>
+        <myString>Gde nas net</myString>
+        <myInt>100500</myInt>
+        <myBoolean>true</myBoolean>
+    </item>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="simpleClass">
+        <id>2</id>
+        <myString>Hello</myString>
+        <myInt>32</myInt>
+        <myBoolean>true</myBoolean>
+    </item>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="simpleClass">
+        <id>3</id>
+        <myString>World1</myString>
+        <myInt>231</myInt>
+        <myBoolean>false</myBoolean>
+    </item>
+</item-list>

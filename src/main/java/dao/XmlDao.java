@@ -2,6 +2,7 @@ package dao;
 
 import javax.xml.bind.JAXBException;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class XmlDao implements Dao {
@@ -9,6 +10,8 @@ public class XmlDao implements Dao {
     private final String resourceName;
     private final Class objectType;
     private MarshallerAdapter marshallerAdapter;
+
+    private List<Object> objectsList;
 
     public XmlDao(String resourceName, Class objectType) throws DaoException {
 
@@ -28,18 +31,25 @@ public class XmlDao implements Dao {
         } catch (JAXBException e) {
             throw new DaoException("Error in JAXBContext creating", e);
         }
+
+        this.objectsList = getAll();
     }
 
+    /**
+     * @param fieldName name of the field for search
+     * @param value required value
+     * @return the first object which has required value
+     * @throws DaoException
+     */
     @Override
-    public Object get(int id) throws DaoException {
+    public Object get(String fieldName, Object value) throws DaoException {
+        int index = getListIndex(fieldName, value);
 
-        List list = getAll();
-
-        if (id >= list.size() || id < 0) {
-            throw new DaoException("Wrong ID");
+        if (index == -1) {
+            return null;
+        } else {
+            return objectsList.get(index);
         }
-
-        return list.get(id);
     }
 
     @Override
@@ -55,37 +65,42 @@ public class XmlDao implements Dao {
     }
 
     @Override
-    public void update(int id, Object object) throws DaoException {
+    public void update(String fieldName, Object value, Object newObject) throws DaoException {
 
         try {
-            objectType.cast(object);
+            objectType.cast(newObject);
         } catch (ClassCastException e) {
             throw new DaoException("Wrong object type", e);
         }
 
-        List list = getAll();
-
-        if (id >= list.size() || id < 0) {
-            throw new DaoException("Wrong ID");
-        }
-
-        list.set(id, object);
-
-        marshal(list);
+        objectsList.set(getListIndex(fieldName, value), newObject);
+        marshal(objectsList);
     }
 
     @Override
-    public void remove(int id) throws DaoException {
-
-        List list = getAll();
-
-        if (id >= list.size() || id < 0) {
-            throw new DaoException("Wrong ID");
+    public void updateAll(List newList) throws DaoException {
+        for (Object item : newList) {
+            try {
+                objectType.cast(item);
+            } catch (ClassCastException e) {
+                throw new DaoException("Wrong type of objects in the list");
+            }
         }
 
-        list.remove(id);
+        objectsList = newList;
+        marshal(objectsList);
+    }
 
-        marshal(list);
+    @Override
+    public void remove(String fieldName, Object value) throws DaoException {
+        objectsList.remove(getListIndex(fieldName, value));
+        marshal(objectsList);
+    }
+
+    @Override
+    public void removeAll() throws DaoException {
+        objectsList.clear();
+        marshal(objectsList);
     }
 
     @Override
@@ -97,10 +112,45 @@ public class XmlDao implements Dao {
             throw new DaoException("Wrong object type", e);
         }
 
-        List list = getAll();
-        list.add(object);
+        objectsList.add(object);
+        marshal(objectsList);
+    }
 
-        marshal(list);
+    public int size() throws DaoException {
+        return getAll().size();
+    }
+
+    private int getListIndex(String fieldName, Object value) throws DaoException {
+
+        Field field;
+
+        try {
+            field = objectType.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            throw new DaoException("Field not found", e);
+        }
+
+        try {
+            field.getType().cast(value);
+
+        } catch (ClassCastException e) {
+            throw new DaoException("Value has wrong type", e);
+        }
+
+        for (int i = 0; i < objectsList.size(); i++) {
+
+            field.setAccessible(true);
+
+            try {
+                if (field.get(objectsList.get(i)).equals(value)) {
+                    return i;
+                }
+            } catch (IllegalAccessException e) {
+                throw new DaoException("Error in getting value of the field", e);
+            }
+        }
+
+        return -1;
     }
 
     private void marshal(List list) throws DaoException {

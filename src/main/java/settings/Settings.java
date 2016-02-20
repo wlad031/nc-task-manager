@@ -91,12 +91,10 @@ public class Settings {
      */
     private void writeSettings() {
 
-        for (int i = 0; i < settings.size(); i++) {
-            try {
-                daoSettings.update(i, settings.get(i));
-            } catch (DaoException e) {
-                throw new RuntimeException("Error in writing settings", e);
-            }
+        try {
+            daoSettings.updateAll(settings);
+        } catch (DaoException e) {
+            throw new RuntimeException("Error in writing settings", e);
         }
     }
 

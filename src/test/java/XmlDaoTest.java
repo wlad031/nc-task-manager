@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 
 public class XmlDaoTest {
 
@@ -28,9 +29,9 @@ public class XmlDaoTest {
         xmlDao = new XmlDao(fileName, SimpleClass.class);
 
         simpleObjects = new SimpleClass[]{
-                new SimpleClass(),
-                new SimpleClass(2, "Hello", 32, true),
-                new SimpleClass(3, "World1", 231, false)
+                new SimpleClass(0, "Gde nas net", 100500, true),
+                new SimpleClass(1, "Hello", 32, true),
+                new SimpleClass(2, "World1", 231, false)
         };
     }
 
@@ -38,12 +39,7 @@ public class XmlDaoTest {
     public void prepareFile() throws DaoException {
 
         // Clean the file
-        File file = new File(XmlDaoTest.class.getClassLoader().getResource(fileName).getFile());
-        try (PrintWriter pw = new PrintWriter(new FileWriter(file, false), false)) {
-            pw.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        xmlDao.removeAll();
 
         // And write objects again
         for (SimpleClass so : simpleObjects) {
@@ -53,57 +49,47 @@ public class XmlDaoTest {
 
     @Test
     public void testGetNAdd() throws DaoException {
-        int id = 0;
 
         for (int i = 0; i < simpleObjects.length; i++) {
-            assertEquals(simpleObjects[id], xmlDao.get(id));
+            assertEquals(simpleObjects[i], xmlDao.get("id", i));
         }
     }
 
     @Test
     public void testUpdate() throws DaoException {
-        int id = 0;
+        int id = 1;
 
-        xmlDao.update(id, simpleObjects[id + 1]);
-        assertEquals(simpleObjects[id + 1], xmlDao.get(id));
+        SimpleClass temp = new SimpleClass(10, "blah", 666, false);
+        xmlDao.update("id", id, temp);
+        assertEquals(temp, xmlDao.get("id", temp.getId()));
     }
 
     @Test
     public void testRemove() throws DaoException {
-        int id = 0;
+        int id = 1;
+        int oldCount = xmlDao.size();
 
-        int oldCount = xmlDao.getAll().size();
+        xmlDao.remove("id", id);
 
-        xmlDao.remove(id);
-
-        int newCount = xmlDao.getAll().size();
-
-        assertEquals(oldCount - 1, newCount);
-
-        for (int i = 0; i < simpleObjects.length; i++) {
-            if (i < id) {
-                assertEquals(simpleObjects[id], xmlDao.get(id));
-            } else {
-                assertEquals(simpleObjects[id + 1], xmlDao.get(id));
-            }
-        }
+        assertEquals(oldCount - 1, xmlDao.size());
+        assertNull(xmlDao.get("id", id));
     }
 
     @XmlRootElement(name = "test")
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class SimpleClass {
 
-        @XmlAttribute
-        public int id;
+        @XmlElement
+        public Integer id;
 
         @XmlElement
         private String myString;
 
         @XmlElement
-        private int myInt;
+        private Integer myInt;
 
         @XmlElement
-        private boolean myBoolean;
+        private Boolean myBoolean;
 
         public SimpleClass() {
             this(0, "a", 10, false);
@@ -116,7 +102,7 @@ public class XmlDaoTest {
             this.myBoolean = b;
         }
 
-        public int getId() {
+        public Integer getId() {
             return id;
         }
 
@@ -124,11 +110,11 @@ public class XmlDaoTest {
             return myString;
         }
 
-        public int getMyInt() {
+        public Integer getMyInt() {
             return myInt;
         }
 
-        public boolean isMyBoolean() {
+        public Boolean getMyBoolean() {
             return myBoolean;
         }
 

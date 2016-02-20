@@ -1,11 +1,27 @@
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.List;
 
+@XmlRootElement(name = "test")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TaskModel {
+
+    @XmlElement
     private int id;
+
+    @XmlElement
     private String title;
+
+    @XmlElement
     private String text;
+
+    @XmlElement
     private Date date;
+
+    @XmlElement
     private boolean finished;
 
     public static TaskModel getModel(int id) {
