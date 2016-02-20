@@ -1,3 +1,5 @@
+package settings;
+
 import dao.Dao;
 import dao.DaoException;
 import dao.XmlDaoFactory;
@@ -47,7 +49,7 @@ public class Settings {
             daoSettings = new XmlDaoFactory().createDao(SETTINGS_FILE, SettingsItem.class);
             settings = daoSettings.getAll();
         } catch (DaoException e) {
-            throw new SettingsException("Settings loading error", e);
+            throw new SettingsException("settings.Settings loading error", e);
         }
     }
 

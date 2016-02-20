@@ -1,3 +1,5 @@
+package settings;
+
 public class SettingsException extends Exception {
 
     public SettingsException() {

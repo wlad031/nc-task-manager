@@ -1,6 +1,8 @@
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import settings.Settings;
+import settings.SettingsException;
 
 import static org.junit.Assert.assertEquals;
 
