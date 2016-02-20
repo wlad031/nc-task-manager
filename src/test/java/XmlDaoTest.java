@@ -48,7 +48,7 @@ public class XmlDaoTest {
     }
 
     @Test
-    public void testGetNAdd() throws DaoException {
+    public void testGet() throws DaoException {
 
         for (int i = 0; i < simpleObjects.length; i++) {
             assertEquals(simpleObjects[i], xmlDao.get("id", i));
