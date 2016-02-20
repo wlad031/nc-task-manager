@@ -5,21 +5,25 @@ import java.util.List;
 /**
  * Simple Data Access Object interface
  */
-public interface Dao {
+public interface Dao<T> {
 
-    Object get(String fieldName, Object value) throws DaoException;
+    <E> T get(String fieldName, E value) throws DaoException;
 
-    List getAll() throws DaoException;
+    List<T> getAll() throws DaoException;
 
-    void update(String fieldName, Object value, Object newObject) throws DaoException;
+    List<T> getAll(String fieldName, T value) throws DaoException;
 
-    void updateAll(List newList) throws DaoException;
+    <E> void update(String fieldName, E value, T newObject) throws DaoException;
 
-    void remove(String fieldName, Object value) throws DaoException;
+    void updateAll(List<T> newList) throws DaoException;
 
-    void add(Object object) throws DaoException;
+    <E> void remove(String fieldName, E value) throws DaoException;
 
-    void removeAll() throws DaoException;
+    void clear() throws DaoException;
 
-    int size() throws DaoException;
+    void add(T object) throws DaoException;
+
+    void add(List<T> objects) throws DaoException;
+
+    int size();
 }

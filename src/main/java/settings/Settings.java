@@ -2,7 +2,6 @@ package settings;
 
 import dao.Dao;
 import dao.DaoException;
-import dao.XmlDaoFactory;
 
 import javax.xml.bind.annotation.*;
 import java.util.List;
@@ -15,7 +14,7 @@ public class Settings {
     /**
      * The of name of the resource file with application settings
      */
-    private final String SETTINGS_FILE = "settings.xml";
+    public final static String SETTINGS_FILE = "settings.xml";
 
     /**
      * Available settings of the application
@@ -46,7 +45,7 @@ public class Settings {
     private Settings() throws SettingsException {
 
         try {
-            daoSettings = new XmlDaoFactory().createDao(SETTINGS_FILE, SettingsItem.class);
+            daoSettings = new SettingsDaoFactory().createDao();
             settings = daoSettings.getAll();
         } catch (DaoException e) {
             throw new SettingsException("settings.Settings loading error", e);

@@ -1,9 +1,12 @@
 import dao.Dao;
 import dao.DaoException;
-import dao.XmlDaoFactory;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import settings.SettingsException;
+import task.TaskException;
+import task.TaskModel;
+import task.TaskXmlDaoFactory;
 
 import java.util.Date;
 import java.util.List;
@@ -17,9 +20,9 @@ public class TaskModelTest {
     private static TaskModel[] testTasks;
 
     @BeforeClass
-    public static void init() throws DaoException {
+    public static void init() throws DaoException, SettingsException {
 
-        dao = new XmlDaoFactory().createDao("tasks_db1.xml", TaskModel.class);
+        dao = new TaskXmlDaoFactory().createDao();
         TaskModel.setDao(dao);
 
         testTasks = new TaskModel[]{
@@ -32,7 +35,7 @@ public class TaskModelTest {
     @Before
     public void prepareFile() throws DaoException {
         // Clean the file
-        dao.removeAll();
+        dao.clear();
 
         // And write objects again
         for (TaskModel taskModel : testTasks) {

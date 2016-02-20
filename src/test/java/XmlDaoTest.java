@@ -6,10 +6,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.xml.bind.annotation.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -39,7 +35,7 @@ public class XmlDaoTest {
     public void prepareFile() throws DaoException {
 
         // Clean the file
-        xmlDao.removeAll();
+        xmlDao.clear();
 
         // And write objects again
         for (SimpleClass so : simpleObjects) {

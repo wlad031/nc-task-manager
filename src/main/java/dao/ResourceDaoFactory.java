@@ -1,6 +1,8 @@
 package dao;
 
+import settings.SettingsException;
+
 public interface ResourceDaoFactory {
 
-    Dao createDao(String resourceName, Class objectType) throws DaoException;
+    Dao createDao() throws DaoException, SettingsException;
 }
