@@ -12,7 +12,7 @@ public class SettingsTest {
     private static Settings.Setting testingSetting;
 
     @BeforeClass
-    public static void init() {
+    public static void init() throws SettingsException {
         settings = Settings.getInstance();
         testingSetting = Settings.Setting.MAIN_RESOURCE_NAME;
         defaultValue = (String) testingSetting.getDefaultValue();

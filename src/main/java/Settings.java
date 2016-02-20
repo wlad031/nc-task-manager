@@ -22,20 +22,10 @@ public class Settings {
 
         MAIN_RESOURCE_NAME {
             @Override
-            public String getName() {
-                return "resource-name";
-            }
-
-            @Override
             public Object getDefaultValue() {
                 return "tasks_db1.xml";
             }
         };
-
-        /**
-         * @return name of the settings item
-         */
-        public abstract String getName();
 
         /**
          * @return default value of the settings item
@@ -46,25 +36,25 @@ public class Settings {
     /**
      * Singleton instance
      */
-    private static Settings instance = new Settings();
+    private static Settings instance = null;
 
     private Dao daoSettings = null;
     List<SettingsItem> settings = null;
 
-    private Settings() {
+    private Settings() throws SettingsException {
 
         try {
             daoSettings = new XmlDaoFactory().createDao(SETTINGS_FILE, SettingsItem.class);
             settings = daoSettings.getAll();
         } catch (DaoException e) {
-            throw new RuntimeException("Settings loading error", e);
+            throw new SettingsException("Settings loading error", e);
         }
     }
 
     public String getSettingValue(Setting setting) {
 
         for (SettingsItem settingsItem : settings) {
-            if (settingsItem.getName().equals(setting.getName())) {
+            if (settingsItem.getName().equals(setting.toString())) {
                 return (String) settingsItem.getValue();
             }
         }
@@ -75,8 +65,8 @@ public class Settings {
     public void setSettingValue(Setting setting, Object settingValue) {
 
         for (int i = 0; i < settings.size(); i++) {
-            if (settings.get(i).getName().equals(setting.getName())) {
-                settings.set(i, new SettingsItem<>(setting.getName(), settingValue));
+            if (settings.get(i).getName().equals(setting.toString())) {
+                settings.set(i, new SettingsItem<>(setting.toString(), settingValue));
             }
         }
 
@@ -86,8 +76,8 @@ public class Settings {
     public void setDefault(Setting setting) {
 
         for (int i = 0; i < settings.size(); i++) {
-            if (settings.get(i).getName().equals(setting.getName())) {
-                settings.set(i, new SettingsItem<>(setting.getName(), setting.getDefaultValue()));
+            if (settings.get(i).getName().equals(setting.toString())) {
+                settings.set(i, new SettingsItem<>(setting.toString(), setting.getDefaultValue()));
             }
         }
 
@@ -108,7 +98,12 @@ public class Settings {
         }
     }
 
-    public static Settings getInstance() {
+    public static Settings getInstance() throws SettingsException {
+
+        if (instance == null) {
+            instance = new Settings();
+        }
+
         return instance;
     }
 
