@@ -4,6 +4,8 @@ import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class XmlDao<T> implements Dao<T> {
@@ -74,7 +76,7 @@ public class XmlDao<T> implements Dao<T> {
     @Override
     public List<T> getAll(String fieldName, T value) throws DaoException {
         List<T> res = new ArrayList<>();
-        List<Integer> indices = getIndiсes(fieldName, value);
+        List<Integer> indices = getIndices(fieldName, value);
 
         for (Integer i : indices) {
             res.add(list.get(i));
@@ -172,7 +174,7 @@ public class XmlDao<T> implements Dao<T> {
         return -1;
     }
 
-    private <E> List<Integer> getIndiсes(String fieldName, E value) throws DaoException {
+    private <E> List<Integer> getIndices(String fieldName, E value) throws DaoException {
         List<Integer> res = new ArrayList<>();
 
         int index = -1;
@@ -198,5 +200,27 @@ public class XmlDao<T> implements Dao<T> {
         } catch (IOException e) {
             throw new DaoException("Error in IO", e);
         }
+    }
+
+    private Field getDeclaredFieldFromAll(String name, Class<?> type) throws NoSuchFieldException {
+        List<Field> fields = getAllFields(new LinkedList<>(), type);
+
+        for (Field field : fields) {
+            if (field.getName().equals(name)) {
+                return field;
+            }
+        }
+
+        throw new NoSuchFieldException(name);
+    }
+
+    private List<Field> getAllFields(List<Field> fields, Class<?> type) {
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+        if (type.getSuperclass() != null) {
+            fields = getAllFields(fields, type.getSuperclass());
+        }
+
+        return fields;
     }
 }

@@ -16,6 +16,7 @@ public class SimpleConsoleTaskView implements TaskView {
     public Object read(String output) {
         Scanner scanner = new Scanner(System.in);
         System.out.println(output);
+
         return scanner.nextLine();
     }
 }

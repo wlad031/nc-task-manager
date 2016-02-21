@@ -2,9 +2,12 @@ package settings;
 
 import dao.Dao;
 import dao.DaoException;
+import task.SimpleConsoleTaskView;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Singleton-class for storing setting of the application
@@ -25,6 +28,13 @@ public class Settings {
             @Override
             public Object getDefaultValue() {
                 return "tasks_db1.xml";
+            }
+        },
+
+        TASK_VIEW {
+            @Override
+            public Object getDefaultValue() {
+                return SimpleConsoleTaskView.class.getName();
             }
         };
 
@@ -52,11 +62,11 @@ public class Settings {
         }
     }
 
-    public String getSettingValue(Setting setting) {
+    public Object getSettingValue(Setting setting) {
 
         for (SettingsItem settingsItem : settings) {
             if (settingsItem.getName().equals(setting.toString())) {
-                return (String) settingsItem.getValue();
+                return settingsItem.getValue();
             }
         }
 
@@ -74,14 +84,15 @@ public class Settings {
         writeSettings();
     }
 
-    public void setDefault(Setting setting) {
+    public void setDefaultSettings() {
 
-        for (int i = 0; i < settings.size(); i++) {
-            if (settings.get(i).getName().equals(setting.toString())) {
-                settings.set(i, new SettingsItem<>(setting.toString(), setting.getDefaultValue()));
-            }
+        List<SettingsItem> defaultSettings = new ArrayList<>();
+
+        for (Setting setting : Setting.values()) {
+            defaultSettings.add(new SettingsItem(setting.toString(), setting.getDefaultValue()));
         }
 
+        settings = new ArrayList<>(defaultSettings);
         writeSettings();
     }
 

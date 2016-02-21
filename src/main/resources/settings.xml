@@ -3,4 +3,7 @@
     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="settingsItem" name="MAIN_RESOURCE_NAME">
         <value xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">tasks_db1.xml</value>
     </item>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="settingsItem" name="TASK_VIEW">
+        <value xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">task.SimpleConsoleTaskView</value>
+    </item>
 </item-list>

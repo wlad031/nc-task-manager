@@ -32,12 +32,6 @@ public class SettingsTest {
         assertEquals(newSetting, settings.getSettingValue(testingSetting));
     }
 
-    @Test
-    public void testSetDefault() {
-        settings.setDefault(testingSetting);
-        assertEquals(defaultValue, settings.getSettingValue(testingSetting));
-    }
-
     @After
     public void setDefaultSettings() {
         settings.setSettingValue(testingSetting, defaultValue);

@@ -5,8 +5,10 @@ import dao.DaoException;
 import mvc.Controller;
 import mvc.ControllerException;
 import mvc.View;
+import settings.Settings;
 import settings.SettingsException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,19 +20,11 @@ import java.util.Locale;
 public class TaskController implements Controller<TaskModel> {
 
     private TaskManager taskManager;
+    private TaskView view;
 
-    public TaskController() throws ControllerException {
-        Dao dao;
-
-        try {
-            dao = new TaskXmlDaoFactory().createDao();
-        } catch (DaoException e) {
-            throw new ControllerException("DAO error", e);
-        } catch (SettingsException e) {
-            throw new ControllerException("Settings error", e);
-        }
-
-        taskManager = new TaskManager(dao);
+    public TaskController(TaskView view, Dao dao) throws ControllerException {
+        this.view = view;
+        this.taskManager = new TaskManager(dao);
     }
 
     public static final String dateFormatString = "MMMM d, yyyy";
@@ -44,6 +38,7 @@ public class TaskController implements Controller<TaskModel> {
     public void action(Action action, Object... params) throws ControllerException {
 
         try {
+
             switch (action) {
                 case ADD:
                     add(params);
@@ -74,27 +69,25 @@ public class TaskController implements Controller<TaskModel> {
 
     private void show(Object... params) throws DaoException {
         TaskModel model = taskManager.getById((Integer) params[0]);
+
         List<TaskModel> list = new ArrayList<>();
         list.add(model);
-        View view = new SimpleConsoleTaskView();
+
         view.show(list);
     }
 
     private void showAll(Object... params) throws DaoException {
         List<TaskModel> list = taskManager.getAll();
-        View view = new SimpleConsoleTaskView();
+
         view.show(list);
     }
 
     private void add(Object... params) throws DaoException, ParseException {
         Integer id = getDao().size();
-//        String title = (String) params[0];
-//        String text = (String) params[1];
-//        Date date = dateFormat.parse((String) params[2]);
 
-        String title = (String) new SimpleConsoleTaskView().read("Enter the title: ");
-        String text = (String) new SimpleConsoleTaskView().read("Enter the text: ");
-        String strDate = (String) new SimpleConsoleTaskView().read(
+        String title = (String) view.read("Enter the title: ");
+        String text = (String) view.read("Enter the text: ");
+        String strDate = (String) view.read(
                 "Enter the date (" + TaskController.dateFormatString + "): ");
         Date date = TaskController.getDateFormat().parse(strDate);
 
