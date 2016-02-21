@@ -1,21 +1,17 @@
 package task;
 
-import dao.Dao;
-import dao.DaoException;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
-import java.util.List;
 
 @XmlRootElement(name = "test")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TaskModel {
 
     @XmlElement
-    private Integer id;
+    protected Integer id;
 
     @XmlElement
     private String title;
@@ -28,29 +24,6 @@ public class TaskModel {
 
     @XmlElement
     private Boolean finished;
-
-    private static Dao dao;
-
-    public static void setDao(Dao dao) {
-        TaskModel.dao = dao;
-    }
-
-    public static TaskModel getModel(int id) throws TaskException {
-
-        try {
-            return (TaskModel) dao.get("id", id);
-        } catch (DaoException e) {
-            throw new TaskException("Task not found", e);
-        }
-    }
-
-    public static List<TaskModel> getAllModels() throws TaskException {
-        try {
-            return dao.getAll();
-        } catch (DaoException e) {
-            throw new TaskException("Error in DAO", e);
-        }
-    }
 
     public TaskModel() {
         this(0, "Test task title", "Test task text", new Date());
@@ -68,11 +41,19 @@ public class TaskModel {
         this.finished = finished;
     }
 
-    public int getId() {
+    public TaskModel(TaskModel that) {
+        this.id = that.id;
+        this.title = that.title;
+        this.text = that.text;
+        this.date = that.date;
+        this.finished = that.finished;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -129,5 +110,16 @@ public class TaskModel {
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "task.TaskModel {" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", date=" + date +
+                ", finished=" + finished +
+                '}';
     }
 }
