@@ -4,11 +4,7 @@ import dao.Dao;
 import dao.DaoException;
 import mvc.Controller;
 import mvc.ControllerException;
-import mvc.View;
-import settings.Settings;
-import settings.SettingsException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,19 +37,19 @@ public class TaskController implements Controller<TaskModel> {
 
             switch (action) {
                 case ADD:
-                    add(params);
+                    add();
                     break;
                 case UPDATE:
-                    update(params);
+                    update((Integer) params[0]);
                     break;
                 case REMOVE:
-                    remove(params);
+                    remove((Integer) params[0]);
                     break;
                 case SHOW:
-                    show(params);
+                    show((Integer) params[0]);
                     break;
                 case SHOW_ALL:
-                    showAll(params);
+                    showAll();
                     break;
                 default:
                     break;
@@ -67,8 +63,8 @@ public class TaskController implements Controller<TaskModel> {
 
     }
 
-    private void show(Object... params) throws DaoException {
-        TaskModel model = taskManager.getById((Integer) params[0]);
+    private void show(Integer id) throws DaoException {
+        TaskModel model = taskManager.getById(id);
 
         List<TaskModel> list = new ArrayList<>();
         list.add(model);
@@ -76,48 +72,67 @@ public class TaskController implements Controller<TaskModel> {
         view.show(list);
     }
 
-    private void showAll(Object... params) throws DaoException {
+    private void showAll() throws DaoException {
         List<TaskModel> list = taskManager.getAll();
-
         view.show(list);
     }
 
-    private void add(Object... params) throws DaoException, ParseException {
-        Integer id = getDao().size();
+    private void add() throws DaoException, ParseException, ControllerException {
+        Integer id = getLastId() + 1;
 
-        String title = (String) view.read("Enter the title: ");
-        String text = (String) view.read("Enter the text: ");
-        String strDate = (String) view.read(
-                "Enter the date (" + TaskController.dateFormatString + "): ");
-        Date date = TaskController.getDateFormat().parse(strDate);
+        List<String> list = readTask();
 
-        taskManager.add(new TaskModel(id, title, text, date));
+        for (String string : list) {
+            if (string.length() < 1) {
+                throw new ControllerException("Parameters can not be empty");
+            }
+        }
+
+        taskManager.add(new TaskModel(id, list.get(0), list.get(1),
+                TaskController.getDateFormat().parse(list.get(2))));
     }
 
-    private void update(Object... params) throws ParseException, DaoException {
-        TaskModel oldModel = taskManager.getById((Integer) params[0]);
+    private void update(Integer id) throws DaoException, ParseException {
+        TaskModel oldModel = taskManager.getById(id);
         TaskModel newModel = new TaskModel(oldModel);
 
-        if (params[1] != null) {
-            newModel.setTitle((String) params[1]);
+        List<String> list = readTask();
+
+        if (list.get(0).length() > 0) {
+            newModel.setTitle(list.get(0));
         }
 
-        if (params[2] != null) {
-            newModel.setText((String) params[2]);
+        if (list.get(1).length() > 0) {
+            newModel.setText(list.get(1));
         }
 
-        if (params[3] != null) {
-            newModel.setDate(dateFormat.parse((String) params[3]));
+        if (list.get(2).length() > 0) {
+            Date date = TaskController.getDateFormat().parse(list.get(2));
+            newModel.setDate(date);
         }
 
         taskManager.update(oldModel, newModel);
     }
 
-    public void remove(Object... params) throws DaoException {
-        taskManager.remove((Integer) params[0]);
+    private void remove(Integer id) throws DaoException {
+        taskManager.remove(id);
+    }
+
+    private List<String> readTask() {
+        List<String> res = new ArrayList<>();
+
+        res.add((String) view.read("Enter the title: "));
+        res.add((String) view.read("Enter the text: "));
+        res.add((String) view.read("Enter the date (" + TaskController.dateFormatString + "): "));
+
+        return res;
     }
 
     public Dao getDao() {
         return taskManager.getDao();
+    }
+
+    private int getLastId() throws DaoException {
+        return ((TaskModel) getDao().getAll().get(getDao().size() - 1)).getId();
     }
 }

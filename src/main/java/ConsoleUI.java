@@ -9,6 +9,7 @@ import task.TaskView;
 import task.TaskXmlDaoFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleUI extends Thread {
@@ -21,8 +22,8 @@ public class ConsoleUI extends Thread {
 
         try {
             Dao dao = new TaskXmlDaoFactory().createDao();
-            TaskView view = (TaskView) Class.forName((String) Settings.getInstance().
-                    getSettingValue(Settings.Setting.TASK_VIEW)).getConstructor().newInstance();
+            TaskView view = (TaskView) Class.forName((String) Settings.getInstance()
+                    .getSettingValue(Settings.Setting.TASK_VIEW)).getConstructor().newInstance();
 
             controller = new TaskController(view, dao);
 
@@ -52,7 +53,9 @@ public class ConsoleUI extends Thread {
             System.out.print(welcome);
 
             try {
-                Command currentCommand = Command.valueOf(scanner.nextLine().toUpperCase());
+                String input = scanner.nextLine().toUpperCase();
+                List<Object> commands = StringSeparator.separate(input);
+                Command currentCommand = Command.valueOf((String) commands.get(0));
 
                 switch (currentCommand) {
                     case HELP:
@@ -64,19 +67,50 @@ public class ConsoleUI extends Thread {
                     case SHOW_ALL:
                         showAll();
                         break;
+                    case ADD:
+                        add();
+                        break;
+                    case SHOW:
+                        show(Integer.parseInt((String) commands.get(1)));
+                        break;
+                    case UPDATE:
+                        update(Integer.parseInt((String) commands.get(1)));
+                        break;
+                    case REMOVE:
+                        remove(Integer.parseInt((String) commands.get(1)));
+                        break;
+                    default:
+                        break;
                 }
+
             } catch (IllegalArgumentException e) {
-                System.out.println("Unknown command");
+                System.out.println("Unknown command: " + e.getMessage());
+            } catch (ClassCastException e) {
+                System.out.println("Illegal arguments: " + e.getMessage());
+            } catch (ControllerException e) {
+                System.out.println("Controller error: " + e.getMessage());
             }
         }
     }
 
-    private void showAll() {
-        try {
-            controller.action(Controller.Action.SHOW_ALL);
-        } catch (ControllerException e) {
-            System.out.println(e.getMessage());
-        }
+    private void showAll() throws ControllerException {
+        controller.action(Controller.Action.SHOW_ALL);
+    }
+
+    public void show(Integer i) throws ControllerException {
+        controller.action(Controller.Action.SHOW, i);
+    }
+
+    public void add() throws ControllerException {
+        controller.action(Controller.Action.ADD);
+    }
+
+    public void update(Integer i) throws ControllerException {
+        controller.action(Controller.Action.UPDATE, i);
+    }
+
+    public void remove(Integer i) throws ControllerException {
+        controller.action(Controller.Action.REMOVE, i);
     }
 
     private void printHelp() {
@@ -90,6 +124,10 @@ public class ConsoleUI extends Thread {
     public enum Command {
         HELP,
         EXIT,
-        SHOW_ALL
+        SHOW_ALL,
+        SHOW,
+        ADD,
+        UPDATE,
+        REMOVE
     }
 }
