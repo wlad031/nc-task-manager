@@ -18,7 +18,7 @@ public class TaskController implements Controller<TaskModel> {
     private TaskManager taskManager;
     private TaskView view;
 
-    public TaskController(TaskView view, Dao dao) throws ControllerException {
+    public TaskController(TaskView view, Dao<TaskModel> dao) throws ControllerException {
         this.view = view;
         this.taskManager = new TaskManager(dao);
     }
