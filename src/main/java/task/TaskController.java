@@ -13,7 +13,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class TaskController implements Controller<TaskModel> {
+/**
+ * Controller implementation for the task model
+ */
+public class TaskController implements Controller {
 
     private TaskManager taskManager;
     private TaskView view;
@@ -23,6 +26,9 @@ public class TaskController implements Controller<TaskModel> {
         this.taskManager = new TaskManager(dao);
     }
 
+    /**
+     * Datetime format
+     */
     public static final String dateFormatString = "MMMM d, yyyy";
     private static DateFormat dateFormat = new SimpleDateFormat(dateFormatString, Locale.ENGLISH);
 
@@ -31,10 +37,9 @@ public class TaskController implements Controller<TaskModel> {
     }
 
     @Override
-    public void action(Action action, Object... params) throws ControllerException {
+    public <T> void action(Action action, T... params) throws ControllerException {
 
         try {
-
             switch (action) {
                 case ADD:
                     add();
@@ -46,10 +51,7 @@ public class TaskController implements Controller<TaskModel> {
                     remove((Integer) params[0]);
                     break;
                 case SHOW:
-                    show((Integer) params[0]);
-                    break;
-                case SHOW_ALL:
-                    showAll();
+                    show(parseInt(params));
                     break;
                 default:
                     break;
@@ -58,22 +60,26 @@ public class TaskController implements Controller<TaskModel> {
         } catch (ParseException e) {
             throw new ControllerException("Invalid date format", e);
         } catch (DaoException e) {
-            throw new ControllerException("DAO error", e);
+            throw new ControllerException("Object not available", e);
+        }
+    }
+
+    private void show(Integer... ids) throws DaoException {
+        List<TaskModel> list;
+
+        if (ids.length == 0) {
+            list = taskManager.getAll();
+        } else {
+            list = new ArrayList<>();
+
+            for (Integer i : ids) {
+                TaskModel model = taskManager.getById(i);
+                if (model != null) {
+                    list.add(model);
+                }
+            }
         }
 
-    }
-
-    private void show(Integer id) throws DaoException {
-        TaskModel model = taskManager.getById(id);
-
-        List<TaskModel> list = new ArrayList<>();
-        list.add(model);
-
-        view.show(list);
-    }
-
-    private void showAll() throws DaoException {
-        List<TaskModel> list = taskManager.getAll();
         view.show(list);
     }
 
@@ -121,9 +127,9 @@ public class TaskController implements Controller<TaskModel> {
     private List<String> readTask() {
         List<String> res = new ArrayList<>();
 
-        res.add((String) view.read("Enter the title: "));
-        res.add((String) view.read("Enter the text: "));
-        res.add((String) view.read("Enter the date (" + TaskController.dateFormatString + "): "));
+        res.add(view.read(TaskView.Field.TITLE));
+        res.add(view.read(TaskView.Field.TEXT));
+        res.add(view.read(TaskView.Field.DATE));
 
         return res;
     }
@@ -133,6 +139,20 @@ public class TaskController implements Controller<TaskModel> {
     }
 
     private int getLastId() throws DaoException {
+        if (getDao().size() == 0) {
+            return 0;
+        }
+
         return ((TaskModel) getDao().getAll().get(getDao().size() - 1)).getId();
+    }
+
+    private <T> Integer[] parseInt(T... strings) {
+        Integer[] res = new Integer[strings.length];
+
+        for (int i = 0; i < strings.length; i++) {
+            res[i] = Integer.parseInt((String) strings[i]);
+        }
+
+        return res;
     }
 }

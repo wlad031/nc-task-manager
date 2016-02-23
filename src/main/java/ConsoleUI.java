@@ -9,6 +9,7 @@ import task.TaskView;
 import task.TaskXmlDaoFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -54,8 +55,9 @@ public class ConsoleUI extends Thread {
 
             try {
                 String input = scanner.nextLine().toUpperCase();
-                List<Object> commands = StringSeparator.separate(input);
-                Command currentCommand = Command.valueOf((String) commands.get(0));
+                List<String> commands = StringSeparator.separate(input);
+                Command currentCommand = Command.valueOf(commands.get(0));
+                List<String> params = new ArrayList<>(commands.subList(1, commands.size()));
 
                 switch (currentCommand) {
                     case HELP:
@@ -64,20 +66,17 @@ public class ConsoleUI extends Thread {
                     case EXIT:
                         exit();
                         break;
-                    case SHOW_ALL:
-                        showAll();
-                        break;
                     case ADD:
                         add();
                         break;
                     case SHOW:
-                        show(Integer.parseInt((String) commands.get(1)));
+                        show(params.toArray());
                         break;
                     case UPDATE:
-                        update(Integer.parseInt((String) commands.get(1)));
+                        update(Integer.parseInt(params.get(0)));
                         break;
                     case REMOVE:
-                        remove(Integer.parseInt((String) commands.get(1)));
+                        remove(Integer.parseInt(params.get(0)));
                         break;
                     default:
                         break;
@@ -86,6 +85,7 @@ public class ConsoleUI extends Thread {
             } catch (IllegalArgumentException e) {
                 System.out.println("Unknown command: " + e.getMessage());
             } catch (ClassCastException e) {
+                e.printStackTrace();
                 System.out.println("Illegal arguments: " + e.getMessage());
             } catch (ControllerException e) {
                 System.out.println("Controller error: " + e.getMessage());
@@ -93,23 +93,19 @@ public class ConsoleUI extends Thread {
         }
     }
 
-    private void showAll() throws ControllerException {
-        controller.action(Controller.Action.SHOW_ALL);
-    }
-
-    public void show(Integer i) throws ControllerException {
-        controller.action(Controller.Action.SHOW, i);
+    public <T> void show(T... ids) throws ControllerException {
+        controller.action(Controller.Action.SHOW, ids);
     }
 
     public void add() throws ControllerException {
         controller.action(Controller.Action.ADD);
     }
 
-    public void update(Integer i) throws ControllerException {
+    public <T> void update(T i) throws ControllerException {
         controller.action(Controller.Action.UPDATE, i);
     }
 
-    public void remove(Integer i) throws ControllerException {
+    public <T> void remove(T i) throws ControllerException {
         controller.action(Controller.Action.REMOVE, i);
     }
 
@@ -124,7 +120,6 @@ public class ConsoleUI extends Thread {
     public enum Command {
         HELP,
         EXIT,
-        SHOW_ALL,
         SHOW,
         ADD,
         UPDATE,

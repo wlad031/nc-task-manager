@@ -7,7 +7,6 @@ import task.SimpleConsoleTaskView;
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Singleton-class for storing setting of the application

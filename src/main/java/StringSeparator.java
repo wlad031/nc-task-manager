@@ -3,7 +3,7 @@ import java.util.List;
 
 public class StringSeparator {
 
-    public static List<Object> separate(String string) {
+    public static List<String> separate(String string) {
         return Arrays.asList(string.split(" "));
     }
 }

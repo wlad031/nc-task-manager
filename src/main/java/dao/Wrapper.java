@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Marshaled class-wrapper
- * @param <T>
+ * (Un)marshaled class-wrapper
+ *
+ * @param <T> type of stored objects
  */
 @XmlRootElement(name = "item-list")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -19,7 +20,7 @@ public class Wrapper<T> {
     private List<T> list;
 
     public Wrapper() {
-        list = new ArrayList<T>();
+        list = new ArrayList();
     }
 
     public Wrapper(List<T> list) {

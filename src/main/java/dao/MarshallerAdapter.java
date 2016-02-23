@@ -9,7 +9,8 @@ import java.util.List;
 
 /**
  * Adapter for simple marshalling/unmarshalling lists of objects
- * @param <T>
+ *
+ * @param <T> type of the (un)marshaled objects
  */
 public class MarshallerAdapter<T> {
 
@@ -17,6 +18,7 @@ public class MarshallerAdapter<T> {
 
     /**
      * Creates JAXB context
+     *
      * @param clazz class of objects
      * @throws JAXBException
      */
@@ -24,6 +26,12 @@ public class MarshallerAdapter<T> {
         context = JAXBContext.newInstance(Wrapper.class, clazz);
     }
 
+    /**
+     * Unmarshals objects
+     *
+     * @param inputStream stream from which the unmarshalling
+     * @return list of the unmarshaled objects
+     */
     public List<T> unmarshal(InputStream inputStream) throws JAXBException {
 
         Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -39,6 +47,12 @@ public class MarshallerAdapter<T> {
         }
     }
 
+    /**
+     * Marshals the list of objects
+     *
+     * @param list         list of marshaled objects
+     * @param outputStream stream to which the marshalling
+     */
     public void marshal(List<T> list, OutputStream outputStream) throws JAXBException {
 
         Wrapper<T> wrapper = new Wrapper<>(list);

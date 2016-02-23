@@ -3,7 +3,13 @@ package task;
 import java.util.List;
 import java.util.Scanner;
 
-public class SimpleConsoleTaskView implements TaskView {
+public class SimpleConsoleTaskView extends TaskView {
+
+    private Scanner scanner;
+
+    public SimpleConsoleTaskView() {
+        scanner = new Scanner(System.in);
+    }
 
     @Override
     public void show(List<TaskModel> list) {
@@ -13,10 +19,31 @@ public class SimpleConsoleTaskView implements TaskView {
     }
 
     @Override
-    public Object read(String output) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(output);
+    public String read(TaskView.Field field) {
+        switch (field) {
+            case TITLE:
+                return readTitle();
+            case TEXT:
+                return readText();
+            case DATE:
+                return readDate();
+            default:
+                return null;
+        }
+    }
 
+    protected String readTitle() {
+        System.out.println("Enter the title: ");
+        return scanner.nextLine();
+    }
+
+    protected String readText() {
+        System.out.println("Enter the text: ");
+        return scanner.nextLine();
+    }
+
+    protected String readDate() {
+        System.out.println("Enter the date (" + TaskController.dateFormatString + "): ");
         return scanner.nextLine();
     }
 }
