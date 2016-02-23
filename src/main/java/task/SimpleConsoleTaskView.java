@@ -1,5 +1,7 @@
 package task;
 
+import java.io.FileNotFoundException;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,7 +21,7 @@ public class SimpleConsoleTaskView extends TaskView {
     }
 
     @Override
-    public String read(TaskView.Field field) {
+    public String read(TaskModel.Field field) {
         switch (field) {
             case TITLE:
                 return readTitle();
@@ -43,7 +45,7 @@ public class SimpleConsoleTaskView extends TaskView {
     }
 
     protected String readDate() {
-        System.out.println("Enter the date (" + TaskController.dateFormatString + "): ");
+        System.out.println("Enter the date (dd.mm.yyyy hh:mm): ");
         return scanner.nextLine();
     }
 }

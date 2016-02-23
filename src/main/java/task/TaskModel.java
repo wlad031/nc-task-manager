@@ -4,7 +4,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @XmlRootElement(name = "test")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,6 +28,8 @@ public class TaskModel {
 
     @XmlElement
     private Boolean finished;
+
+    public static String dateFormatString = "dd.mm.yyyy hh:mm";
 
     public TaskModel() {
         this(0, "Test task title", "Test task text", new Date());
@@ -89,6 +95,14 @@ public class TaskModel {
         this.finished = finished;
     }
 
+    public boolean isNow() {
+        Date now = new Date();
+        long diff = now.getTime() - date.getTime();
+        long diffMinutes = diff / (60 * 1000) % 60;
+
+        return diffMinutes == 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,12 +128,18 @@ public class TaskModel {
 
     @Override
     public String toString() {
-        return "task.TaskModel {" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                ", date=" + date +
-                ", finished=" + finished +
-                '}';
+        DateFormat dateFormat = new SimpleDateFormat(dateFormatString, Locale.ENGLISH);
+
+        return "id = " + id +
+                ", '" + title + '\'' +
+                ", " + text + '\'' +
+                ", notify - " + dateFormat.format(date) +
+                ", done - " + finished;
+    }
+
+    public enum Field {
+        TITLE,
+        TEXT,
+        DATE
     }
 }

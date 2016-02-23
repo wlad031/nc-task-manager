@@ -8,10 +8,7 @@ import mvc.ControllerException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Controller implementation for the task model
@@ -29,8 +26,7 @@ public class TaskController implements Controller {
     /**
      * Datetime format
      */
-    public static final String dateFormatString = "MMMM d, yyyy";
-    private static DateFormat dateFormat = new SimpleDateFormat(dateFormatString, Locale.ENGLISH);
+    private static DateFormat dateFormat = new SimpleDateFormat(TaskModel.dateFormatString, Locale.ENGLISH);
 
     public static DateFormat getDateFormat() {
         return dateFormat;
@@ -45,10 +41,10 @@ public class TaskController implements Controller {
                     add();
                     break;
                 case UPDATE:
-                    update((Integer) params[0]);
+                    update(parseInt(params));
                     break;
                 case REMOVE:
-                    remove((Integer) params[0]);
+                    remove(parseInt(params));
                     break;
                 case SHOW:
                     show(parseInt(params));
@@ -61,6 +57,16 @@ public class TaskController implements Controller {
             throw new ControllerException("Invalid date format", e);
         } catch (DaoException e) {
             throw new ControllerException("Object not available", e);
+        }
+    }
+
+    public void showNowTasks() throws DaoException {
+        List<TaskModel> models = taskManager.getAll();
+
+        for (TaskModel model : models) {
+            if (model.isNow()) {
+                view.show(Arrays.asList(model));
+            }
         }
     }
 
@@ -98,38 +104,43 @@ public class TaskController implements Controller {
                 TaskController.getDateFormat().parse(list.get(2))));
     }
 
-    private void update(Integer id) throws DaoException, ParseException {
-        TaskModel oldModel = taskManager.getById(id);
-        TaskModel newModel = new TaskModel(oldModel);
+    private void update(Integer... ids) throws DaoException, ParseException {
 
-        List<String> list = readTask();
+        if (ids.length > 0) {
+            TaskModel oldModel = taskManager.getById(ids[0]);
+            TaskModel newModel = new TaskModel(oldModel);
 
-        if (list.get(0).length() > 0) {
-            newModel.setTitle(list.get(0));
+            List<String> list = readTask();
+
+            if (list.get(0).length() > 0) {
+                newModel.setTitle(list.get(0));
+            }
+
+            if (list.get(1).length() > 0) {
+                newModel.setText(list.get(1));
+            }
+
+            if (list.get(2).length() > 0) {
+                Date date = TaskController.getDateFormat().parse(list.get(2));
+                newModel.setDate(date);
+            }
+
+            taskManager.update(oldModel, newModel);
         }
-
-        if (list.get(1).length() > 0) {
-            newModel.setText(list.get(1));
-        }
-
-        if (list.get(2).length() > 0) {
-            Date date = TaskController.getDateFormat().parse(list.get(2));
-            newModel.setDate(date);
-        }
-
-        taskManager.update(oldModel, newModel);
     }
 
-    private void remove(Integer id) throws DaoException {
-        taskManager.remove(id);
+    private void remove(Integer... ids) throws DaoException {
+        if (ids.length > 0) {
+            taskManager.remove(ids[0]);
+        }
     }
 
     private List<String> readTask() {
         List<String> res = new ArrayList<>();
 
-        res.add(view.read(TaskView.Field.TITLE));
-        res.add(view.read(TaskView.Field.TEXT));
-        res.add(view.read(TaskView.Field.DATE));
+        res.add(view.read(TaskModel.Field.TITLE));
+        res.add(view.read(TaskModel.Field.TEXT));
+        res.add(view.read(TaskModel.Field.DATE));
 
         return res;
     }

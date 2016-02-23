@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class ConsoleUI extends Thread {
 
-    TaskController controller;
+    private TaskController controller;
 
     private final String welcome = "> ";
 
@@ -73,12 +73,13 @@ public class ConsoleUI extends Thread {
                         show(params.toArray());
                         break;
                     case UPDATE:
-                        update(Integer.parseInt(params.get(0)));
+                        update(params.toArray());
                         break;
                     case REMOVE:
-                        remove(Integer.parseInt(params.get(0)));
+                        remove(params.toArray());
                         break;
                     default:
+                        System.out.println("Not available command");
                         break;
                 }
 
@@ -101,12 +102,12 @@ public class ConsoleUI extends Thread {
         controller.action(Controller.Action.ADD);
     }
 
-    public <T> void update(T i) throws ControllerException {
-        controller.action(Controller.Action.UPDATE, i);
+    public <T> void update(T... ids) throws ControllerException {
+        controller.action(Controller.Action.UPDATE, ids);
     }
 
-    public <T> void remove(T i) throws ControllerException {
-        controller.action(Controller.Action.REMOVE, i);
+    public <T> void remove(T... ids) throws ControllerException {
+        controller.action(Controller.Action.REMOVE, ids);
     }
 
     private void printHelp() {
