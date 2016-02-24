@@ -29,7 +29,7 @@ public class TaskModel {
     @XmlElement
     private Boolean finished;
 
-    public static String dateFormatString = "dd.mm.yyyy hh:mm";
+    public static DateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy hh:mm", Locale.ENGLISH);
 
     public TaskModel() {
         this(0, "Test task title", "Test task text", new Date());
@@ -128,7 +128,7 @@ public class TaskModel {
 
     @Override
     public String toString() {
-        DateFormat dateFormat = new SimpleDateFormat(dateFormatString, Locale.ENGLISH);
+
 
         return "id = " + id +
                 ", '" + title + '\'' +

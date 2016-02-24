@@ -1,5 +1,7 @@
 import mvc.ControllerException;
 import settings.SettingsException;
+import ui.ConsoleUI;
+import ui.Notifier;
 
 public class Main {
 

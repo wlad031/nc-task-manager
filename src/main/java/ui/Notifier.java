@@ -1,3 +1,5 @@
+package ui;
+
 import dao.Dao;
 import dao.DaoException;
 import mvc.ControllerException;

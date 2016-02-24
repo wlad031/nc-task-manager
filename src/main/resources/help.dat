@@ -1,0 +1,11 @@
+You use an application "Task Manager", which will remind you of your tasks.
+
+Available commands:
+
+* help ------------- print this message
+* exit ------------- close this application
+* add -------------- add new task
+* show ------------- print all tasks
+* show <id> -------- print task which has required id
+* remove <id> ------ remove task which has required id
+* update <id> ------ update task which has required id

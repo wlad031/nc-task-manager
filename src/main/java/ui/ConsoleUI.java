@@ -1,3 +1,5 @@
+package ui;
+
 import dao.Dao;
 import dao.DaoException;
 import mvc.Controller;
@@ -7,6 +9,7 @@ import settings.SettingsException;
 import task.TaskController;
 import task.TaskView;
 import task.TaskXmlDaoFactory;
+import utils.StringSeparator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -111,7 +114,7 @@ public class ConsoleUI extends Thread {
     }
 
     private void printHelp() {
-        System.out.println("ETO HELPA");
+        System.out.println(Help.getText());
     }
 
     private void exit() {

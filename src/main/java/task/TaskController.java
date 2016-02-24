@@ -23,13 +23,8 @@ public class TaskController implements Controller {
         this.taskManager = new TaskManager(dao);
     }
 
-    /**
-     * Datetime format
-     */
-    private static DateFormat dateFormat = new SimpleDateFormat(TaskModel.dateFormatString, Locale.ENGLISH);
-
     public static DateFormat getDateFormat() {
-        return dateFormat;
+        return TaskModel.dateFormat;
     }
 
     @Override
