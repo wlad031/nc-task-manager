@@ -8,7 +8,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 @XmlRootElement(name = "test")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -27,24 +26,24 @@ public class TaskModel {
     private Date date;
 
     @XmlElement
-    private Boolean finished;
+    private Boolean complete;
 
-    public static DateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy hh:mm", Locale.ENGLISH);
+    public static DateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy HH:mm", Locale.ENGLISH);
 
     public TaskModel() {
-        this(0, "Test task title", "Test task text", new Date());
+
     }
 
     public TaskModel(int id, String title, String text, Date date) {
         this(id, title, text, date, false);
     }
 
-    public TaskModel(int id, String title, String text, Date date, boolean finished) {
+    public TaskModel(int id, String title, String text, Date date, boolean complete) {
         this.id = id;
         this.title = title;
         this.text = text;
         this.date = date;
-        this.finished = finished;
+        this.complete = complete;
     }
 
     public TaskModel(TaskModel that) {
@@ -52,7 +51,7 @@ public class TaskModel {
         this.title = that.title;
         this.text = that.text;
         this.date = that.date;
-        this.finished = that.finished;
+        this.complete = that.complete;
     }
 
     public Integer getId() {
@@ -87,12 +86,12 @@ public class TaskModel {
         this.date = date;
     }
 
-    public boolean isFinished() {
-        return finished;
+    public boolean getComplete() {
+        return complete;
     }
 
-    public void setFinished(boolean finished) {
-        this.finished = finished;
+    public void setComplete(boolean complete) {
+        this.complete = complete;
     }
 
     public boolean isNow() {
@@ -100,7 +99,7 @@ public class TaskModel {
         long diff = now.getTime() - date.getTime();
         long diffMinutes = diff / (60 * 1000) % 60;
 
-        return diffMinutes == 0;
+        return diffMinutes == 0 && !getComplete();
     }
 
     @Override
@@ -128,13 +127,11 @@ public class TaskModel {
 
     @Override
     public String toString() {
-
-
         return "id = " + id +
-                ", '" + title + '\'' +
-                ", " + text + '\'' +
+                ", " + title +
+                ": " + text +
                 ", notify - " + dateFormat.format(date) +
-                ", done - " + finished;
+                ", done - " + complete;
     }
 
     public enum Field {

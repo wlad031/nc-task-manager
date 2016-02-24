@@ -7,8 +7,10 @@ import mvc.ControllerException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Controller implementation for the task model
@@ -102,22 +104,29 @@ public class TaskController implements Controller {
     private void update(Integer... ids) throws DaoException, ParseException {
 
         if (ids.length > 0) {
+
             TaskModel oldModel = taskManager.getById(ids[0]);
             TaskModel newModel = new TaskModel(oldModel);
 
-            List<String> list = readTask();
+            if (ids.length == 2 && ids[1] == 1) {
 
-            if (list.get(0).length() > 0) {
-                newModel.setTitle(list.get(0));
-            }
+                newModel.setComplete(true);
 
-            if (list.get(1).length() > 0) {
-                newModel.setText(list.get(1));
-            }
+            } else {
+                List<String> list = readTask();
 
-            if (list.get(2).length() > 0) {
-                Date date = TaskController.getDateFormat().parse(list.get(2));
-                newModel.setDate(date);
+                if (list.get(0).length() > 0) {
+                    newModel.setTitle(list.get(0));
+                }
+
+                if (list.get(1).length() > 0) {
+                    newModel.setText(list.get(1));
+                }
+
+                if (list.get(2).length() > 0) {
+                    Date date = TaskController.getDateFormat().parse(list.get(2));
+                    newModel.setDate(date);
+                }
             }
 
             taskManager.update(oldModel, newModel);

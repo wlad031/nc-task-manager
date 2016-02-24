@@ -1,17 +1,33 @@
 import mvc.ControllerException;
-import settings.SettingsException;
 import ui.ConsoleUI;
 import ui.Notifier;
 
 public class Main {
 
-    public static void main(String[] args) throws ControllerException, SettingsException {
+    public static void main(String[] args) {
 
-        Thread ui = new ConsoleUI();
-        ui.start();
+        try {
 
-        Thread notifier = new Notifier();
-        notifier.setDaemon(true);
-        notifier.start();
+            Thread ui = new ConsoleUI();
+            Thread notifier = new Notifier();
+
+            ui.start();
+            notifier.start();
+
+            while (!ui.isInterrupted()) {
+            }
+
+            notifier.interrupt();
+
+            notifier.join();
+            ui.join();
+
+        } catch (InterruptedException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (ControllerException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            System.out.println("Goodbye!");
+        }
     }
 }

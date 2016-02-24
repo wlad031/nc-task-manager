@@ -31,16 +31,21 @@ public class Notifier extends Thread {
     @Override
     public void run() {
 
-        while (!this.isInterrupted()) {
-            try {
-                controller.showNowTasks();
+        while (true) {
 
-                Thread.sleep(60_000);
+            if (!this.isInterrupted()) {
 
-            } catch (DaoException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                try {
+                    controller.showNowTasks();
+                    Thread.sleep(60_000);
+                } catch (DaoException e) {
+                    System.out.println("Object access error");
+                } catch (InterruptedException e) {
+                    return;
+                }
+
+            } else {
+                return;
             }
         }
     }

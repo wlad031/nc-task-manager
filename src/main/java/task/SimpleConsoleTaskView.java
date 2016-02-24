@@ -1,7 +1,5 @@
 package task;
 
-import java.io.FileNotFoundException;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -45,7 +43,7 @@ public class SimpleConsoleTaskView extends TaskView {
     }
 
     protected String readDate() {
-        System.out.println("Enter the date (dd.mm.yyyy hh:mm): ");
+        System.out.println("Enter the date (dd.mm.yyyy HH:mm): ");
         return scanner.nextLine();
     }
 }
