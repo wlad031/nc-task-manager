@@ -56,59 +56,54 @@ public class ConsoleUI extends Thread {
 
         Scanner scanner = new Scanner(System.in);
 
-        while (true) {
+        while (!this.isInterrupted()) {
 
-            if (!this.isInterrupted()) {
+            System.out.print(welcome);
 
-                System.out.print(welcome);
+            try {
+                String input = scanner.nextLine().toUpperCase();
+                List<String> commands = StringSeparator.separate(input);
+                Command currentCommand = Command.valueOf(commands.get(0));
+                List<String> params = new ArrayList<>(commands.subList(1, commands.size()));
 
-                try {
-
-                    String input = scanner.nextLine().toUpperCase();
-                    List<String> commands = StringSeparator.separate(input);
-                    Command currentCommand = Command.valueOf(commands.get(0));
-                    List<String> params = new ArrayList<>(commands.subList(1, commands.size()));
-
-                    switch (currentCommand) {
-                        case HELP:
-                            printHelp();
-                            break;
-                        case EXIT:
-                            exit();
-                            break;
-                        case ADD:
-                            add();
-                            break;
-                        case SHOW:
-                            show(params.toArray());
-                            break;
-                        case UPDATE:
-                            update(params.toArray());
-                            break;
-                        case REMOVE:
-                            remove(params.toArray());
-                            break;
-                        case COMPLETE:
-                            update(Arrays.asList(params.get(0), "1").toArray());
-                            break;
-                        default:
-                            System.out.println("Unavailable command");
-                            break;
-                    }
-
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Unknown command: " + e.getMessage());
-                } catch (ClassCastException e) {
-                    e.printStackTrace();
-                    System.out.println("Illegal arguments: " + e.getMessage());
-                } catch (ControllerException e) {
-                    System.out.println("Controller error: " + e.getMessage());
+                switch (currentCommand) {
+                    case HELP:
+                        printHelp();
+                        break;
+                    case EXIT:
+                        exit();
+                        break;
+                    case ADD:
+                        add();
+                        break;
+                    case SHOW:
+                        show(params.toArray());
+                        break;
+                    case UPDATE:
+                        update(params.toArray());
+                        break;
+                    case REMOVE:
+                        remove(params.toArray());
+                        break;
+                    case COMPLETE:
+                        update(Arrays.asList(params.get(0), "1").toArray());
+                        break;
+                    default:
+                        System.out.println("Unavailable command");
+                        break;
                 }
 
-            } else {
-                return;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Unknown command: " + e.getMessage());
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+                System.out.println("Illegal arguments: " + e.getMessage());
+            } catch (ControllerException e) {
+                System.out.println("Controller error: " + e.getMessage());
             }
         }
+
+        return;
     }
 
     public <T> void show(T... params) throws ControllerException {
