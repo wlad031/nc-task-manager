@@ -1,9 +1,7 @@
-package settings;
+package dao;
 
-import dao.Dao;
-import dao.DaoException;
-import dao.ResourceDaoFactory;
-import dao.XmlDao;
+import settings.Settings;
+import settings.SettingsException;
 
 public class SettingsDaoFactory implements ResourceDaoFactory {
 

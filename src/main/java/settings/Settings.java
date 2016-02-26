@@ -2,7 +2,8 @@ package settings;
 
 import dao.Dao;
 import dao.DaoException;
-import task.SimpleConsoleTaskView;
+import dao.SettingsDaoFactory;
+import views.SimpleConsoleTaskView;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -27,6 +28,27 @@ public class Settings {
             @Override
             public Object getDefaultValue() {
                 return "tasks_db1.xml";
+            }
+        },
+
+        WELCOME_SYMBOL {
+            @Override
+            public Object getDefaultValue() {
+                return "> ";
+            }
+        },
+
+        WELCOME_MESSAGE {
+            @Override
+            public Object getDefaultValue() {
+                return  "Task Manager\ntype 'help' to get help, 'exit' to exit the program";
+            }
+        },
+
+        DATETIME_FORMAT {
+            @Override
+            public Object getDefaultValue() {
+                return  "dd.mm.yyyy HH:mm";
             }
         },
 
@@ -57,7 +79,7 @@ public class Settings {
             daoSettings = new SettingsDaoFactory().createDao();
             settings = daoSettings.getAll();
         } catch (DaoException e) {
-            throw new SettingsException("settings.Settings loading error", e);
+            throw new SettingsException("Settings loading error", e);
         }
     }
 

@@ -1,4 +1,7 @@
-package task;
+package models;
+
+import settings.Settings;
+import settings.SettingsException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -17,9 +20,6 @@ public class TaskModel {
     protected Integer id;
 
     @XmlElement
-    private String title;
-
-    @XmlElement
     private String text;
 
     @XmlElement
@@ -28,19 +28,19 @@ public class TaskModel {
     @XmlElement
     private Boolean complete;
 
-    public static DateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy HH:mm", Locale.ENGLISH);
+    private static DateFormat dateFormat;
+    private static String stringDateFormat;
 
     public TaskModel() {
 
     }
 
-    public TaskModel(int id, String title, String text, Date date) {
-        this(id, title, text, date, false);
+    public TaskModel(int id, String text, Date date) {
+        this(id, text, date, false);
     }
 
-    public TaskModel(int id, String title, String text, Date date, boolean complete) {
+    public TaskModel(int id, String text, Date date, boolean complete) {
         this.id = id;
-        this.title = title;
         this.text = text;
         this.date = date;
         this.complete = complete;
@@ -48,10 +48,19 @@ public class TaskModel {
 
     public TaskModel(TaskModel that) {
         this.id = that.id;
-        this.title = that.title;
         this.text = that.text;
         this.date = that.date;
         this.complete = that.complete;
+    }
+
+    static {
+        try {
+            stringDateFormat = (String) Settings.getInstance().getSettingValue(Settings.Setting.DATETIME_FORMAT);
+        } catch (SettingsException e) {
+            stringDateFormat = "dd.mm.yyyy HH:mm";
+        }
+
+        dateFormat = new SimpleDateFormat(stringDateFormat, Locale.ENGLISH);
     }
 
     public Integer getId() {
@@ -60,14 +69,6 @@ public class TaskModel {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getText() {
@@ -86,7 +87,7 @@ public class TaskModel {
         this.date = date;
     }
 
-    public boolean getComplete() {
+    public boolean isComplete() {
         return complete;
     }
 
@@ -96,10 +97,11 @@ public class TaskModel {
 
     public boolean isNow() {
         Date now = new Date();
-        long diff = now.getTime() - date.getTime();
-        long diffMinutes = diff / (60 * 1000) % 60;
 
-        return diffMinutes == 0 && !getComplete();
+        long diff = now.getTime() - date.getTime();
+        long diffMinutes = diff / (60 * 1000) / 60;
+
+        return diffMinutes == 0 && !isComplete();
     }
 
     @Override
@@ -110,7 +112,6 @@ public class TaskModel {
         TaskModel taskModel = (TaskModel) o;
 
         if (!id.equals(taskModel.id)) return false;
-        if (title != null ? !title.equals(taskModel.title) : taskModel.title != null) return false;
         if (text != null ? !text.equals(taskModel.text) : taskModel.text != null) return false;
         return !(date != null ? !date.equals(taskModel.date) : taskModel.date != null);
 
@@ -119,7 +120,6 @@ public class TaskModel {
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
         return result;
@@ -128,15 +128,21 @@ public class TaskModel {
     @Override
     public String toString() {
         return "id = " + id +
-                ", " + title +
                 ": " + text +
                 ", notify - " + dateFormat.format(date) +
                 ", done - " + complete;
     }
 
     public enum Field {
-        TITLE,
         TEXT,
         DATE
+    }
+
+    public static DateFormat getDateFormat() {
+        return dateFormat;
+    }
+
+    public static String getStringDateFormat() {
+        return stringDateFormat;
     }
 }

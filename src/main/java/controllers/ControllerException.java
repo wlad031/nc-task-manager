@@ -1,4 +1,4 @@
-package mvc;
+package controllers;
 
 public class ControllerException extends Exception {
     public ControllerException() {

@@ -1,18 +1,19 @@
 package ui;
 
+import controllers.ControllerException;
+import controllers.TaskController;
 import dao.Dao;
 import dao.DaoException;
-import mvc.ControllerException;
 import settings.SettingsException;
-import task.TaskController;
-import task.TaskView;
-import task.TaskXmlDaoFactory;
+import views.JFrameTaskView;
+import views.TaskView;
+import views.TaskXmlDaoFactory;
 
 public class Notifier extends Thread {
 
     private TaskController controller;
 
-    public Notifier() {
+    public Notifier() throws UiException {
 
         try {
             Dao dao = new TaskXmlDaoFactory().createDao();
@@ -20,11 +21,11 @@ public class Notifier extends Thread {
             controller = new TaskController(view, dao);
 
         } catch (DaoException e) {
-            e.printStackTrace();
+            throw new UiException("Error in DAO", e);
         } catch (SettingsException e) {
-            e.printStackTrace();
+            throw new UiException("Settings error", e);
         } catch (ControllerException e) {
-            e.printStackTrace();
+            throw new UiException("Controller error", e);
         }
     }
 
@@ -34,11 +35,12 @@ public class Notifier extends Thread {
         while (!this.isInterrupted()) {
 
             try {
-                controller.showNowTasks();
+                controller.request("now");
                 Thread.sleep(60_000);
-            } catch (DaoException e) {
-                System.out.println("Object access error");
             } catch (InterruptedException e) {
+                return;
+            } catch (ControllerException e) {
+                System.out.println("Error in the notifier");
                 return;
             }
         }

@@ -1,6 +1,7 @@
-package task;
+package views;
 
-import mvc.View;
+import models.TaskModel;
+import views.View;
 
 public abstract class TaskView implements View<TaskModel> {
 

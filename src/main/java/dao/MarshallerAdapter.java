@@ -1,5 +1,7 @@
 package dao;
 
+import dao.Wrapper;
+
 import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 import java.io.InputStream;

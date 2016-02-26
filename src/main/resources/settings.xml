@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <item-list>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="settingsItem" name="WELCOME_MESSAGE">
+        <value xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">Task Manager&#13;&#10;type 'help' to get help, 'exit' to exit the program</value>
+    </item>
     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="settingsItem" name="MAIN_RESOURCE_NAME">
         <value xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">tasks_db1.xml</value>
     </item>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="settingsItem" name="WELCOME_SYMBOL">
+        <value xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">&gt; </value>
+    </item>
     <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="settingsItem" name="TASK_VIEW">
-        <value xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">task.SimpleConsoleTaskView</value>
+        <value xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">views.SimpleConsoleTaskView</value>
+    </item>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="settingsItem" name="DATETIME_FORMAT">
+        <value xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">dd.MM.yyyy HH:mm</value>
     </item>
 </item-list>

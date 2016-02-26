@@ -1,4 +1,4 @@
-package mvc;
+package views;
 
 import java.util.List;
 

@@ -1,9 +1,10 @@
-package task;
+package views;
 
 import dao.Dao;
 import dao.DaoException;
 import dao.ResourceDaoFactory;
 import dao.XmlDao;
+import models.TaskModel;
 import settings.Settings;
 import settings.SettingsException;
 
