@@ -1,7 +1,7 @@
 package actions;
 
-import controllers.exceptions.ControllerException;
 import controllers.TaskController;
+import controllers.exceptions.ControllerException;
 import dao.exceptions.DaoException;
 import models.TaskModel;
 

@@ -3,10 +3,10 @@ package notifiers;
 import controllers.TaskController;
 import controllers.exceptions.ControllerException;
 import dao.exceptions.DaoException;
+import dao.factories.TaskXmlDaoFactory;
 import notifiers.exceptions.NotifierException;
 import settings.exceptions.SettingsException;
 import views.JFrameTaskView;
-import dao.factories.TaskXmlDaoFactory;
 
 public class Notifier extends Thread {
 

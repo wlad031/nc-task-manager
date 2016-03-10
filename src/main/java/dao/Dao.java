@@ -25,7 +25,7 @@ public interface Dao<T extends Model> {
     /**
      * Replaces a necessary object on the new object
      *
-     * @param id required ID
+     * @param id        required ID
      * @param newObject replacing object
      */
     void update(int id, T newObject) throws DaoException;

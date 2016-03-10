@@ -49,7 +49,7 @@ public class Settings {
         DATETIME_FORMAT {
             @Override
             public Object getDefaultValue() {
-                return  "dd.mm.yyyy HH:mm";
+                return "dd.mm.yyyy HH:mm";
             }
         },
 

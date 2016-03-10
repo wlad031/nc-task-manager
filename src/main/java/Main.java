@@ -1,7 +1,7 @@
+import notifiers.Notifier;
 import notifiers.exceptions.NotifierException;
 import settings.exceptions.SettingsException;
 import ui.ConsoleUi;
-import notifiers.Notifier;
 import ui.exceptions.UiException;
 
 public class Main {

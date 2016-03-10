@@ -3,7 +3,10 @@ package models;
 import settings.Settings;
 import settings.exceptions.SettingsException;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
