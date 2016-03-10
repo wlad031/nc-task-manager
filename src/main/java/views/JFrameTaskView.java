@@ -36,8 +36,8 @@ public class JFrameTaskView extends TaskView {
     }
 
     @Override
-    public String read(TaskModel.Field field) {
-        return null;
+    public List<String> read() {
+        throw new UnsupportedOperationException();
     }
 
     public void createForm() {

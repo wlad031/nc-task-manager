@@ -1,6 +1,7 @@
 package controllers;
 
-import dao.DaoException;
+import controllers.exceptions.ControllerException;
+import dao.exceptions.DaoException;
 
 /**
  * controllers.Controller interface

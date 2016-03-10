@@ -1,11 +1,12 @@
 package actions;
 
-import controllers.ControllerException;
+import controllers.exceptions.ControllerException;
 import controllers.TaskController;
-import dao.DaoException;
+import dao.exceptions.DaoException;
 import models.TaskModel;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 public class TaskControllerActionAdd extends TaskControllerAction<Integer> {
@@ -14,10 +15,9 @@ public class TaskControllerActionAdd extends TaskControllerAction<Integer> {
     }
 
     @Override
-    public void run() throws ControllerException, DaoException, ParseException {
-        Integer id = getLastId() + 1;
+    public void action() throws ControllerException, DaoException, ParseException {
 
-        List<String> list = readTask();
+        List<String> list = view.read();
 
         for (String string : list) {
             if (string.length() < 1) {
@@ -25,7 +25,10 @@ public class TaskControllerActionAdd extends TaskControllerAction<Integer> {
             }
         }
 
-        dao.add(new TaskModel(id, list.get(0),
-                TaskModel.getDateFormat().parse(list.get(1))));
+        int id = getLastId() + 1;
+        String text = list.get(0);
+        Date date = TaskModel.getDateFormat().parse(list.get(1));
+
+        dao.add(new TaskModel(id, text, date));
     }
 }

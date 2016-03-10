@@ -1,8 +1,9 @@
 package settings;
 
 import dao.Dao;
-import dao.DaoException;
-import dao.SettingsDaoFactory;
+import dao.exceptions.DaoException;
+import dao.factories.SettingsDaoFactory;
+import settings.exceptions.SettingsException;
 import views.SimpleConsoleTaskView;
 
 import javax.xml.bind.annotation.*;
@@ -17,7 +18,7 @@ public class Settings {
     /**
      * The of name of the resource file with application settings
      */
-    public final static String SETTINGS_FILE = "settings.xml";
+    public final static String SETTINGS_FILE = "config.cfg";
 
     /**
      * Available settings of the application
@@ -27,7 +28,7 @@ public class Settings {
         MAIN_RESOURCE_NAME {
             @Override
             public Object getDefaultValue() {
-                return "tasks_db1.xml";
+                return "tasks_db.xml";
             }
         },
 
@@ -41,7 +42,7 @@ public class Settings {
         WELCOME_MESSAGE {
             @Override
             public Object getDefaultValue() {
-                return  "Task Manager\ntype 'help' to get help, 'exit' to exit the program";
+                return "Task Manager\ntype 'help' to get help, 'exit' to exit the program";
             }
         },
 
@@ -49,6 +50,13 @@ public class Settings {
             @Override
             public Object getDefaultValue() {
                 return  "dd.mm.yyyy HH:mm";
+            }
+        },
+
+        CONSOLE_VIEW_LENGTH {
+            @Override
+            public Object getDefaultValue() {
+                return 48;
             }
         },
 
@@ -129,7 +137,7 @@ public class Settings {
         }
     }
 
-    public static Settings getInstance() throws SettingsException {
+    public static synchronized Settings getInstance() throws SettingsException {
 
         if (instance == null) {
             instance = new Settings();
@@ -171,14 +179,6 @@ public class Settings {
 
         public void setValue(T value) {
             this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return "SettingsItem {" +
-                    "name='" + name + '\'' +
-                    ", value=" + value.getClass().getName() +
-                    '}';
         }
     }
 }

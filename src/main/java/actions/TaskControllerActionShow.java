@@ -1,7 +1,7 @@
 package actions;
 
 import controllers.TaskController;
-import dao.DaoException;
+import dao.exceptions.DaoException;
 import models.TaskModel;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class TaskControllerActionShow extends TaskControllerAction<Integer> {
     }
 
     @Override
-    public void run() throws DaoException {
+    public void action() throws DaoException {
         List<TaskModel> list;
 
         if (params.length == 0) {
@@ -22,7 +22,7 @@ public class TaskControllerActionShow extends TaskControllerAction<Integer> {
             list = new ArrayList<>();
 
             for (Integer i : params) {
-                TaskModel model = (TaskModel) dao.get("id", i);
+                TaskModel model = (TaskModel) dao.get(i);
                 if (model != null) {
                     list.add(model);
                 }

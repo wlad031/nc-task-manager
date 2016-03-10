@@ -1,9 +1,9 @@
 package views;
 
 import models.TaskModel;
-import views.View;
+
+import java.util.List;
 
 public abstract class TaskView implements View<TaskModel> {
-
-    public abstract String read(TaskModel.Field field);
+    public abstract List<String> read();
 }

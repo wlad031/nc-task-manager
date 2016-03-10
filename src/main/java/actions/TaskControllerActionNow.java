@@ -1,7 +1,7 @@
 package actions;
 
 import controllers.TaskController;
-import dao.DaoException;
+import dao.exceptions.DaoException;
 import models.TaskModel;
 
 import java.util.Arrays;
@@ -14,13 +14,9 @@ public class TaskControllerActionNow extends TaskControllerAction<Integer> {
 
 
     @Override
-    public void run() throws DaoException {
+    public void action() throws DaoException {
         List<TaskModel> models = dao.getAll();
 
-        for (TaskModel model : models) {
-            if (model.isNow()) {
-                view.show(Arrays.asList(model));
-            }
-        }
+        models.stream().filter(model -> model.isNow()).forEach(model -> view.show(Arrays.asList(model)));
     }
 }

@@ -1,15 +1,15 @@
 package ui;
 
-import controllers.ControllerException;
+import controllers.exceptions.ControllerException;
 import controllers.TaskController;
-import dao.Dao;
-import dao.DaoException;
+import dao.exceptions.DaoException;
 import settings.Settings;
-import settings.SettingsException;
+import settings.exceptions.SettingsException;
+import ui.exceptions.UiException;
 import utils.Parser;
 import utils.StringUtils;
 import views.TaskView;
-import views.TaskXmlDaoFactory;
+import dao.factories.TaskXmlDaoFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -17,20 +17,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class ConsoleUI extends Thread {
+public class ConsoleUi extends Thread {
 
     private TaskController controller;
 
     private String welcomeSymbol;
 
-    public ConsoleUI() throws UiException {
+    public ConsoleUi() throws UiException {
 
         try {
-            Dao dao = new TaskXmlDaoFactory().createDao();
             TaskView view = (TaskView) Class.forName((String) Settings.getInstance()
                     .getSettingValue(Settings.Setting.TASK_VIEW)).getConstructor().newInstance();
 
-            controller = new TaskController(view, dao);
+            controller = new TaskController(view, new TaskXmlDaoFactory().createDao());
 
             String welcomeMessage = (String) Settings.getInstance().getSettingValue(Settings.Setting.WELCOME_MESSAGE);
             System.out.println(welcomeMessage);
@@ -85,11 +84,7 @@ public class ConsoleUI extends Thread {
                         controller.request("update", Parser.parseInt(params.toArray()));
                         break;
                     case COMPLETE:
-                        controller.request("update",
-                                Parser.parseInt(Arrays.asList(params.get(0), "1").toArray()));
-                        break;
-                    default:
-                        System.out.println("Unavailable command");
+                        controller.request("complete", Parser.parseInt(Arrays.asList(params.get(0)).toArray()));
                         break;
                 }
 

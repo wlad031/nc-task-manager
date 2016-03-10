@@ -1,19 +1,21 @@
 package dao;
 
+import dao.exceptions.DaoException;
+import models.Model;
+
 import java.util.List;
 
 /**
  * Simple Data Access Object interface
  */
-public interface Dao<T> {
+public interface Dao<T extends Model> {
 
     /**
-     * @param fieldName name of the field for search
-     * @param value     required value
+     * @param id required ID
      * @return the first object which has required value
      * @throws DaoException
      */
-    <E> T get(String fieldName, E value) throws DaoException;
+    T get(int id) throws DaoException;
 
     /**
      * @return all objects from the list
@@ -23,11 +25,10 @@ public interface Dao<T> {
     /**
      * Replaces a necessary object on the new object
      *
-     * @param fieldName name of the field for search
-     * @param value     required value
+     * @param id required ID
      * @param newObject replacing object
      */
-    <E> void update(String fieldName, E value, T newObject) throws DaoException;
+    void update(int id, T newObject) throws DaoException;
 
     /**
      * Replaces all objects
@@ -39,11 +40,9 @@ public interface Dao<T> {
     /**
      * Removes the first object which has required value
      *
-     * @param fieldName name of the field for search
-     * @param value     required value
-     * @param <E>       type of the required value
+     * @param id required ID
      */
-    <E> void remove(String fieldName, E value) throws DaoException;
+    void remove(int id) throws DaoException;
 
     /**
      * Removes all objects

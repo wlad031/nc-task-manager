@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<item-list>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="taskModel" id="1">
+        <text>Task 1</text>
+        <date>1111-11-11T11:11:00+03:00</date>
+        <complete>false</complete>
+    </item>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="taskModel" id="2">
+        <text>Task 2</text>
+        <date>2000-01-01T00:00:00+03:00</date>
+        <complete>false</complete>
+    </item>
+    <item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="taskModel" id="3">
+        <text>Task 3</text>
+        <date>2012-03-12T16:45:00+04:00</date>
+        <complete>false</complete>
+    </item>
+</item-list>

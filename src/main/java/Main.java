@@ -1,14 +1,15 @@
-import settings.SettingsException;
-import ui.ConsoleUI;
-import ui.Notifier;
-import ui.UiException;
+import notifiers.exceptions.NotifierException;
+import settings.exceptions.SettingsException;
+import ui.ConsoleUi;
+import notifiers.Notifier;
+import ui.exceptions.UiException;
 
 public class Main {
 
     public static void main(String[] args) throws SettingsException {
 
         try {
-            Thread ui = new ConsoleUI();
+            Thread ui = new ConsoleUi();
             Thread notifier = new Notifier();
 
             ui.start();
@@ -16,7 +17,7 @@ public class Main {
 
             ui.join();
 
-        } catch (UiException e) {
+        } catch (UiException | NotifierException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (InterruptedException e) {
             e.printStackTrace();

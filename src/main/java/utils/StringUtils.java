@@ -10,11 +10,6 @@ public class StringUtils {
         return Arrays.asList(string.split(" "));
     }
 
-    public static String toNormalCase(String string) {
-        String res = string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
-        return res;
-    }
-
     public static List<String> separate(String string, int n) {
         List<String> res = new ArrayList<>();
         String[] temp = string.split(" ");

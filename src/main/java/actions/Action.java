@@ -1,10 +1,10 @@
 package actions;
 
-import controllers.ControllerException;
-import dao.DaoException;
+import controllers.exceptions.ControllerException;
+import dao.exceptions.DaoException;
 
 import java.text.ParseException;
 
 public interface Action {
-    void run() throws ControllerException, DaoException, ParseException;
+    void action() throws ControllerException, DaoException, ParseException;
 }

@@ -1,4 +1,4 @@
-package controllers;
+package controllers.exceptions;
 
 public class ControllerException extends Exception {
     public ControllerException() {

@@ -1,12 +1,11 @@
-package views;
+package dao.factories;
 
 import dao.Dao;
-import dao.DaoException;
-import dao.ResourceDaoFactory;
 import dao.XmlDao;
+import dao.exceptions.DaoException;
 import models.TaskModel;
 import settings.Settings;
-import settings.SettingsException;
+import settings.exceptions.SettingsException;
 
 public class TaskXmlDaoFactory implements ResourceDaoFactory {
 

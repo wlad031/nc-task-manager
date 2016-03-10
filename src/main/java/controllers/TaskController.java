@@ -1,13 +1,12 @@
 package controllers;
 
-import actions.TaskControllerAction;
+import actions.*;
+import controllers.exceptions.ControllerException;
 import dao.Dao;
-import dao.DaoException;
+import dao.exceptions.DaoException;
 import models.TaskModel;
-import utils.StringUtils;
 import views.TaskView;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 
 /**
@@ -27,26 +26,74 @@ public class TaskController implements Controller<Integer> {
     public void request(String actionName, Integer... params) throws ControllerException {
 
         try {
-            actionName = StringUtils.toNormalCase(actionName);
-            String actionClassName = TaskControllerAction.class.getName() + actionName;
-            Class<? extends TaskControllerAction> actionClass =
-                    (Class<? extends TaskControllerAction>) Class.forName(actionClassName);
-
-            TaskControllerAction action =
-                    actionClass.getConstructor(TaskController.class, Integer[].class).newInstance(this, params);
-            action.run();
-
+            ControllerActions.valueOf(actionName.toUpperCase()).callAction(this, params);
+        } catch (IllegalArgumentException e) {
+            throw new ControllerException("Wrong action", e);
         } catch (DaoException e) {
             throw new ControllerException("Object not available", e);
-        } catch (ClassNotFoundException | ClassCastException |
-                NoSuchMethodException | IllegalAccessException |
-                InstantiationException | InvocationTargetException e) {
-
-            throw new ControllerException("Wrong action", e);
-
         } catch (ParseException e) {
             throw new ControllerException("Invalid datetime format", e);
         }
+    }
+
+    private enum ControllerActions {
+
+        ADD {
+            @Override
+            public void callAction(TaskController controller, Integer... params)
+                    throws ParseException, DaoException, ControllerException {
+
+                new TaskControllerActionAdd(controller, params).action();
+            }
+        },
+
+        COMPLETE {
+            @Override
+            public void callAction(TaskController controller, Integer... params)
+                    throws ParseException, DaoException {
+
+                new TaskControllerActionComplete(controller, params).action();
+            }
+        },
+
+        NOW {
+            @Override
+            public void callAction(TaskController controller, Integer... params)
+                    throws ParseException, DaoException {
+
+                new TaskControllerActionNow(controller, params).action();
+            }
+        },
+
+        REMOVE {
+            @Override
+            public void callAction(TaskController controller, Integer... params)
+                    throws ParseException, DaoException {
+
+                new TaskControllerActionRemove(controller, params).action();
+            }
+        },
+
+        SHOW {
+            @Override
+            public void callAction(TaskController controller, Integer... params)
+                    throws ParseException, DaoException {
+
+                new TaskControllerActionShow(controller, params).action();
+            }
+        },
+
+        UPDATE {
+            @Override
+            public void callAction(TaskController controller, Integer... params)
+                    throws ParseException, DaoException {
+
+                new TaskControllerActionUpdate(controller, params).action();
+            }
+        };
+
+        public abstract void callAction(TaskController controller, Integer... params)
+                throws ParseException, DaoException, ControllerException;
     }
 
     public Dao getDao() {

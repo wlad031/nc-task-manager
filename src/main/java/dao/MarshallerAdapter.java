@@ -1,7 +1,5 @@
 package dao;
 
-import dao.Wrapper;
-
 import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 import java.io.InputStream;
@@ -29,27 +27,6 @@ public class MarshallerAdapter<T> {
     }
 
     /**
-     * Unmarshals objects
-     *
-     * @param inputStream stream from which the unmarshalling
-     * @return list of the unmarshaled objects
-     */
-    public List<T> unmarshal(InputStream inputStream) throws JAXBException {
-
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-        StreamSource xml = new StreamSource(inputStream);
-
-        try {
-            Wrapper<T> wrapper = (Wrapper<T>) unmarshaller.unmarshal(xml, Wrapper.class).getValue();
-
-            return wrapper.getList();
-
-        } catch (UnmarshalException e) {
-            return new ArrayList<>();
-        }
-    }
-
-    /**
      * Marshals the list of objects
      *
      * @param list         list of marshaled objects
@@ -62,5 +39,23 @@ public class MarshallerAdapter<T> {
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.marshal(wrapper, outputStream);
+    }
+
+    /**
+     * Unmarshals objects
+     *
+     * @param inputStream stream from which the unmarshalling
+     * @return list of the unmarshaled objects
+     */
+    public List<T> unmarshal(InputStream inputStream) throws JAXBException {
+
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        StreamSource xml = new StreamSource(inputStream);
+
+        try {
+            return ((Wrapper<T>) unmarshaller.unmarshal(xml, Wrapper.class).getValue()).getList();
+        } catch (UnmarshalException e) {
+            return new ArrayList<>();
+        }
     }
 }

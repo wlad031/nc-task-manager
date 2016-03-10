@@ -1,4 +1,4 @@
-package settings;
+package settings.exceptions;
 
 public class SettingsException extends Exception {
 

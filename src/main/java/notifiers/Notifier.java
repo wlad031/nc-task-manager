@@ -1,31 +1,28 @@
-package ui;
+package notifiers;
 
-import controllers.ControllerException;
 import controllers.TaskController;
-import dao.Dao;
-import dao.DaoException;
-import settings.SettingsException;
+import controllers.exceptions.ControllerException;
+import dao.exceptions.DaoException;
+import notifiers.exceptions.NotifierException;
+import settings.exceptions.SettingsException;
 import views.JFrameTaskView;
-import views.TaskView;
-import views.TaskXmlDaoFactory;
+import dao.factories.TaskXmlDaoFactory;
 
 public class Notifier extends Thread {
 
     private TaskController controller;
+    private long checkDelay = 60_000;
 
-    public Notifier() throws UiException {
+    public Notifier() throws NotifierException {
 
         try {
-            Dao dao = new TaskXmlDaoFactory().createDao();
-            TaskView view = new JFrameTaskView();
-            controller = new TaskController(view, dao);
-
+            controller = new TaskController(new JFrameTaskView(), new TaskXmlDaoFactory().createDao());
         } catch (DaoException e) {
-            throw new UiException("Error in DAO", e);
+            throw new NotifierException("Error in DAO", e);
         } catch (SettingsException e) {
-            throw new UiException("Settings error", e);
+            throw new NotifierException("Settings error", e);
         } catch (ControllerException e) {
-            throw new UiException("Controller error", e);
+            throw new NotifierException("Controller error", e);
         }
     }
 
@@ -36,7 +33,7 @@ public class Notifier extends Thread {
 
             try {
                 controller.request("now");
-                Thread.sleep(60_000);
+                Thread.sleep(checkDelay);
             } catch (InterruptedException e) {
                 return;
             } catch (ControllerException e) {

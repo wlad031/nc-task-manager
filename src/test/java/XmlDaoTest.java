@@ -1,15 +1,17 @@
 import dao.Dao;
-import dao.DaoException;
 import dao.XmlDao;
+import dao.exceptions.DaoException;
+import models.Model;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
 
 public class XmlDaoTest {
 
@@ -47,7 +49,7 @@ public class XmlDaoTest {
     public void testGet() throws DaoException {
 
         for (int i = 0; i < simpleObjects.length; i++) {
-            assertEquals(simpleObjects[i], xmlDao.get("id", i));
+            assertEquals(simpleObjects[i], xmlDao.get(i));
         }
     }
 
@@ -56,8 +58,8 @@ public class XmlDaoTest {
         int id = 1;
 
         SimpleClass temp = new SimpleClass(10, "blah", 666, false);
-        xmlDao.update("id", id, temp);
-        assertEquals(temp, xmlDao.get("id", temp.getId()));
+        xmlDao.update(id, temp);
+        assertEquals(temp, xmlDao.get(temp.getId()));
     }
 
     @Test
@@ -65,18 +67,20 @@ public class XmlDaoTest {
         int id = 1;
         int oldCount = xmlDao.size();
 
-        xmlDao.remove("id", id);
+        xmlDao.remove(id);
 
         assertEquals(oldCount - 1, xmlDao.size());
-        assertNull(xmlDao.get("id", id));
+
+        try {
+            xmlDao.get(id);
+        } catch (DaoException e) {
+            assert true;
+        }
     }
 
-    @XmlRootElement(name = "test")
+    @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static class SimpleClass {
-
-        @XmlElement
-        public Integer id;
+    public static class SimpleClass extends Model {
 
         @XmlElement
         private String myString;
@@ -96,10 +100,6 @@ public class XmlDaoTest {
             this.myString = s;
             this.myInt = a;
             this.myBoolean = b;
-        }
-
-        public Integer getId() {
-            return id;
         }
 
         public String getMyString() {

@@ -1,7 +1,7 @@
 package actions;
 
 import controllers.TaskController;
-import dao.DaoException;
+import dao.exceptions.DaoException;
 
 public class TaskControllerActionRemove extends TaskControllerAction<Integer> {
     public TaskControllerActionRemove(TaskController controller, Integer... params) {
@@ -9,9 +9,10 @@ public class TaskControllerActionRemove extends TaskControllerAction<Integer> {
     }
 
     @Override
-    public void run() throws DaoException {
+    public void action() throws DaoException {
         if (params.length > 0) {
-            dao.remove("id", params[0]);
+            int removedModelId = params[0];
+            dao.remove(removedModelId);
         }
     }
 }
