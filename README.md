@@ -1,6 +1,6 @@
 ##task-manager
 
-This is simple application to manage your tasks.
+This is the simple application to manage your tasks.
 
 ###Usage
 
@@ -16,5 +16,5 @@ mvn clean install
 java -jar target/taskmanager-1.0-SNAPSHOT.jar
 ```
 
-And type 'help' to get help message.
+Type 'help' to get the help message.
 
